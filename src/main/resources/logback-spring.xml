@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--  生产环境使用的配置文件，如果生产环境稳定，修改日志级别 -->
+<configuration>
+    <!--多环境配置日志地址与级别-->
+    <springProfile name="test">
+        <property name="filePath" value="../test_logs/log" />
+        <property name="logLevel" value="DEBUG"/>
+    </springProfile>
+    <springProfile name="dev">
+        <property name="filePath" value="../dev_logs/log" />
+        <property name="logLevel" value="DEBUG"/>
+    </springProfile>
+    <springProfile name="prod">
+        <property name="filePath" value="../pro_logs/log" />
+        <property name="logLevel" value="DEBUG"/>
+    </springProfile>
+
+    <!-- 最大保存时间 -->
+    <property name="maxHistory" value="90"/>
+
+    <!-- 控制台打印日志的相关配置 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 日志格式 -->
+        <encoder>
+            <pattern>%-30(%d{yyyy-MM-dd HH:mm:ss} %-4relative [%thread]) %-5level %logger{36} - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+
+
+    <!-- 按照每天生成日志文件 -->
+    <appender name="FileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 循环政策：基于时间创建日志文件 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${filePath}_%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!--保存时间-->
+            <MaxHistory>${maxHistory}</MaxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-4relative [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <!-- tomcat中文乱码 -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+
+    <logger name="com.module" level="${logLevel}" />
+    <logger name="org.apache.ibatis" level="${logLevel}"/>
+    <!-- 基于INFO处理日志：具体控制台或者文件对日志级别的处理还要看所在appender配置的filter，如果没有配置filter，则使用root配置 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FileAppender" />
+    </root>
+</configuration>
