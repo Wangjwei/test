@@ -1,4 +1,4 @@
-package com.example.test.utils;
+package com.example.test.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,6 +6,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ * 跨域问题
+ * */
 @Configuration
 public class CorsConfig {
     @Bean
