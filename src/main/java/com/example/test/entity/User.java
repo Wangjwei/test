@@ -1,9 +1,10 @@
 package com.example.test.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
+@TableName("user")
 @ApiModel(value="User对象", description="用户表")
 public class User extends Model<User> {
 
@@ -34,20 +36,31 @@ public class User extends Model<User> {
     private Integer id;
 
     @ApiModelProperty(value = "名字")
+    @TableField("name")
     private String name;
 
+    @ApiModelProperty(value = "头像")
+    @TableField("url")
+    private String url;
+
     @ApiModelProperty(value = "年龄")
+    @TableField("age")
     private Integer age;
 
     @ApiModelProperty(value = "性别(0:女;1:男)")
+    @TableField("sex")
     private Integer sex;
 
+    @ApiModelProperty(value = "住址")
+    @TableField("address")
+    private String address;
+
     @ApiModelProperty(value = "创建时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @TableField("create_time")
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "修改时间")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @TableField("update_time")
     private LocalDateTime updateTime;
 
 

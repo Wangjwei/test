@@ -60,7 +60,7 @@ public class MybatisplusGenerator {
         //表名生成策略 underline_to_camel转驼峰命名，no_change默认的没变化
         strategy.setNaming(NamingStrategy.underline_to_camel);
         //列名生成策略 underline_to_camel转驼峰命名，no_change默认的没变化
-        //strategy.setColumnNaming(NamingStrategy.underline_to_camel);
+        strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         // 是否使用Lombok优化代码
         strategy.setEntityLombokModel(true);
         //需要生成的表
@@ -73,8 +73,8 @@ public class MybatisplusGenerator {
         strategy.setControllerMappingHyphenStyle(true);
 
         strategy.setEntityLombokModel(true);
-        //strategy.setEntitySerialVersionUID(true);
-        //strategy.setEntityTableFieldAnnotationEnable(true);
+        strategy.setEntitySerialVersionUID(true);
+        strategy.setEntityTableFieldAnnotationEnable(true);
 
         mpg.setStrategy(strategy);
         // 配置模板
