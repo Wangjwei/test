@@ -1,12 +1,10 @@
 package com.example.test.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -20,9 +18,10 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author wangjw
- * @since 2021-08-31
+ * @since 2021-09-01
  */
 @Data
+@Builder
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("user")
@@ -51,16 +50,20 @@ public class User extends Model<User> {
     @TableField("sex")
     private Integer sex;
 
+    @ApiModelProperty(value = "手机号")
+    @TableField("phone")
+    private String phone;
+
     @ApiModelProperty(value = "住址")
     @TableField("address")
     private String address;
 
     @ApiModelProperty(value = "创建时间")
-    @TableField("create_time")
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @ApiModelProperty(value = "修改时间")
-    @TableField("update_time")
+    @TableField(value = "update_time", fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
 
 
