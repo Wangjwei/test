@@ -1,7 +1,10 @@
 package com.example.test.service;
 
-import com.example.test.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.test.entity.User;
+import io.swagger.annotations.ApiOperation;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2021-09-01
  */
 public interface UserService extends IService<User> {
+    @ApiOperation("插入数据到索引中")
+    void insertUser() throws Exception;
+
+    @ApiOperation("根据用户输入内容获取自动补全提示语")
+    List<String> searchCompletionSuggest(String searchValue);
 
 }

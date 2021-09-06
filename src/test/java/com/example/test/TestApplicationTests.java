@@ -2,8 +2,10 @@ package com.example.test;
 
 import com.alibaba.fastjson.JSON;
 import com.example.test.entity.User;
+import com.example.test.service.UserService;
 import com.example.test.utils.ESClient;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.bulk.BulkResponse;
@@ -23,26 +25,36 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.core.TimeValue;
 import org.elasticsearch.index.query.MatchAllQueryBuilder;
-import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.WildcardQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @SpringBootTest
 class TestApplicationTests {
 
+    private final UserService userService;
+
     RestHighLevelClient client = ESClient.getClient();
+
+    @Autowired
+    TestApplicationTests(UserService userService) {
+        this.userService = userService;
+    }
 
     @Test
     void contextLoads() {
@@ -200,9 +212,19 @@ class TestApplicationTests {
         request.indices("user");
 
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+
+        //仅支持中文
+        MatchQueryBuilder queryBuilder = new MatchQueryBuilder("address", "大")
+                // 设置查询前缀长度
+                //.prefixLength(3)
+                // 设置模糊查询最大扩展
+                //.maxExpansions(10)
+                // 开启模糊查询
+                .fuzziness(Fuzziness.AUTO);
+
         //term搜索
         //term 根据检索词来准确匹配字段(不要用term去搜索text类型的字段)
-        //TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery("name", "张三");
+//        TermQueryBuilder queryBuilder = QueryBuilders.termQuery("name", "张三");
         //terms 相当于or的关系，只要一个匹配就行
         //TermsQueryBuilder queryBuilder = QueryBuilders.termsQuery("name","张","三");
         //range 对字段进行范围的匹配 gt 大于 lt 小于
@@ -214,11 +236,11 @@ class TestApplicationTests {
 
         //text搜索
         //match 查找和检索词短语匹配的文档(检索词可以是文本、数字、日期或者布尔值) 也可以进行模糊匹配
-        //MatchQueryBuilder queryBuilder = QueryBuilders.matchQuery("name","张三");
+        //MatchQueryBuilder queryBuilder = QueryBuilders.matchQuery("address","香坊");
         //match_bool_prefix 解析检索词，生成一个bool复合检索语句
         //MatchBoolPrefixQueryBuilder queryBuilder = QueryBuilders.matchBoolPrefixQuery("address", "南 岗");
         //multi_match 同时对多个字段进行查询匹配
-        MultiMatchQueryBuilder queryBuilder = QueryBuilders.multiMatchQuery("四","address", "name");
+        //MultiMatchQueryBuilder queryBuilder = QueryBuilders.multiMatchQuery("四","address", "name", "address.pinyin", "name.pinyin");
 
         sourceBuilder.query(queryBuilder);
         sourceBuilder.timeout(TimeValue.timeValueMinutes(2L));
@@ -249,7 +271,8 @@ class TestApplicationTests {
         request.indices("user");
 
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        WildcardQueryBuilder queryBuilder = QueryBuilders.wildcardQuery("name.pinyin", "shi"+"*");
+//        WildcardQueryBuilder queryBuilder = QueryBuilders.wildcardQuery("name.pinyin", "ls"+"*");
+        WildcardQueryBuilder queryBuilder = QueryBuilders.wildcardQuery("address.pinyin", "xiangf"+"*");
 
         /*//使用dis_max直接取多个query中，分数最高的那一个query的分数即可
         DisMaxQueryBuilder queryBuilder = QueryBuilders.disMaxQuery();

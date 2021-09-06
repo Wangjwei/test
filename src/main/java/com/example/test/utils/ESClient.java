@@ -10,7 +10,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 public class ESClient {
     public static RestHighLevelClient getClient() {
         //创建HttpHost
-        HttpHost host = new HttpHost("localhost", 9200);
+        HttpHost host = new HttpHost("127.0.0.1", 9200);
         // 创建RestClientBuilder
         RestClientBuilder builder = RestClient.builder(host);
         // 创建RestHighLevelClient
