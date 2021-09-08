@@ -4,11 +4,10 @@ server:
     context-path: /
   tomcat:
     uri-encoding: UTF-8
-  jsp:
-    init-parameters:
-      development: true
 
 spring:
+  application:
+    name: nacos
   servlet:
     encoding:
       charset: UTF-8
@@ -17,13 +16,28 @@ spring:
   freemarker:
     check-template-location: false
   profiles:
-    active: dev
+    active: test
   jackson:
     time-zone: GMT+8
   data:
     redis:
       repositories:
         enabled: false
-  elasticsearch:
-    rest:
-      uris: http://localhost:9200
+
+logging:
+  level:
+    root: info
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  check-config-location: true
+  configuration:
+    map-underscore-to-camel-case: true
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #\u5F00\u542Fsql\u65E5\u5FD7
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      #自定义填充策略接口实现
+      global-config.meta-object-handler: com.example.test.handler.MyMetaObjectHandler

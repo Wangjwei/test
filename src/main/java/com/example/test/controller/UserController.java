@@ -2,6 +2,9 @@ package com.example.test.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.nacos.api.annotation.NacosInjected;
+import com.alibaba.nacos.api.config.annotation.NacosValue;
+import com.alibaba.nacos.api.naming.NamingService;
 import com.example.test.config.Result;
 import com.example.test.entity.User;
 import com.example.test.service.UserService;
@@ -44,9 +47,58 @@ public class UserController {
 
     private final UserService userService;
 
+    @NacosInjected
+    private NamingService namingService;
+    @NacosValue(value = "${wjwTest:test}", autoRefreshed = true)
+    private String wjwTest;
+    /*@Value("${nacos.config.server-addr}")
+    private String serverAddr;
+    @Value("${nacos.config.namespace}")
+    private String namespace;
+    @Value("nacos.config.data-id")
+    private String dataId;
+    @Value("nacos.config.group:DEFAULT_GROUP")
+    private String group;*/
+
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("/nacos")
+    public Result nacos(){
+        /*//根据ip和命名空间获取配置文件对象ConfigService
+        Properties properties = new Properties();
+        properties.put("serverAddr", serverAddr);
+        properties.put("namespace", namespace);
+        ConfigService configService = NacosFactory.createConfigService(properties);
+        //获得配置内容
+        String content = configService.getConfig(dataId, group, 5000);
+        log.info("content:{}",content);
+        //发布配置
+        String config = "wjwMsg: myNacos";
+        configService.publishConfig(dataId, group, config);
+        //删除配置
+        configService.removeConfig(dataId, group);
+        //添加监听
+        Listener listener = new Listener() {
+            @Override
+            public void receiveConfigInfo(String configInfo) {
+                System.out.println("变更后读取到的配置内容：" + "\r\n" + configInfo);
+            }
+            @Override
+            public Executor getExecutor() {
+                return null;
+            }
+        };
+        configService.addListener(dataId,group,listener);
+        //删除监听
+        configService.removeListener(dataId, group, listener);*/
+
+        //查询服务列表
+        //namingService.getAllInstances(serviceName) ;
+        return Result.ok(wjwTest);
+        //return Result.ok();
     }
 
     @ApiOperation("新增")
@@ -115,16 +167,13 @@ public class UserController {
         SearchRequest searchRequest = new SearchRequest("user");
         //添加大部分查询参数到 SearchSourceBuilder，接收QueryBuilders构建的查询参数
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-        searchSourceBuilder.query(QueryBuilders.multiMatchQuery("ha","address", "name", "address.pinyin", "name.pinyin")) //同时对多个字段进行模糊匹配
+        searchSourceBuilder.query(QueryBuilders.multiMatchQuery("daj","address", "name", "address.pinyin", "name.pinyin")) //同时对多个字段进行模糊匹配
                 // 设置当前查询的超时时间
                 .timeout(new TimeValue(60, TimeUnit.SECONDS))
                 // 设置查询结果的页大小，默认是10
                 .size(5)
                 //搜索结果突出
                 .highlighter(new HighlightBuilder()
-                        /*.field("name")//搜索字段
-                        .field("name.pinyin")
-                        .field("address")*/
                         .field("address.pinyin")
                         .requireFieldMatch(false) // 只需一个高亮
                         .preTags("<b style='color:red'>")
