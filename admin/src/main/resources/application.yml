@@ -1,0 +1,23 @@
+mybatis-plus:
+  #configuration:
+    #打印执行SQL
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      #id生成策略
+      #AUTO(0):数据库ID自增
+      #NONE(1):未设置主键类型
+      #INPUT(2):用户输入ID(该类型可以通过自己注册自动填充插件进行填充)
+      #以下3种类型、只有当插入对象ID 为空，才自动填充。
+      #ID_WORKER(3):全局唯一ID (idWorker)
+      #UUID(4):全局唯一ID (UUID)
+      #ID_WORKER_STR(5):字符串全局唯一ID (idWorker 的字符串表示)
+      id-type: auto
+      #逻辑已删除值(默认为 1)
+      logic-delete-value: 1
+      #逻辑未删除值(默认为 0)
+      logic-not-delete-value: 0
+      #自动填充
+      meta-object-handler: com.example.admin.handler.MyMetaObjectHandler
+      #表名前缀
+      #table-prefix: tb_
