@@ -1,0 +1,8 @@
+spring:
+  nacos:
+    config:
+      server-addr: 127.0.0.1:8848
+      namespace: ac4ddd60-5b3f-4155-8176-0c3537206f20
+      data-id: gzt-test
+    discovery:
+      server-addr: 127.0.0.1:8848

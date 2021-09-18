@@ -1,7 +1,55 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  tomcat:
+    uri-encoding: UTF-8
+
+spring:
+  application:
+    name: gzt
+  freemarker:
+    check-template-location: false
+  profiles:
+    active: test
+  jackson:
+    time-zone: GMT+8
+  data:
+    redis:
+      repositories:
+        enabled: false
+  elasticsearch:
+    rest:
+      uris: http://127.0.0.1:9200
+  redis:
+    host: 127.0.0.1
+    database: 0
+    port: 6379
+    password:
+    timeout: 3000
+    jedis:
+      pool:
+        max-active: 100
+        max-wait: -1
+        max-idle: 100
+        min-idle: 0
+
+cluster:
+  name: "docker-cluster"
+network:
+  host: 0.0.0.0
+xpack:
+  security:
+    enabled: false
+
 mybatis-plus:
   #configuration:
-    #打印执行SQL
-    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  #打印执行SQL
+  #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
       #id生成策略
@@ -21,3 +69,17 @@ mybatis-plus:
       meta-object-handler: com.example.admin.handler.MyMetaObjectHandler
       #表名前缀
       #table-prefix: tb_
+
+common:
+  default:
+    password: yongyi1234@
+  auth:
+    path: /index.jsp
+  icons:
+    path: /resources/icons
+
+file:
+  upload:
+    path: E:/workspace/upload/
+  view:
+    path: /upload/view/

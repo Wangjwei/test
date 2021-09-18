@@ -1,0 +1,82 @@
+spring:
+ datasource:
+  driver-class-name: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://192.168.3.126:3306/test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&serverTimezone=GMT%2B8
+  username: s_root
+  password: 1Q2w3e
+ quartz:
+  #持久化到数据库
+  job-store-type: jdbc
+  scheduler-name: myScheduler # 相同 Scheduler 名字的节点，形成一个 Quartz 集群
+  wait-for-jobs-to-complete-on-shutdown: true # 应用关闭时，是否等待定时任务执行完成。默认为 false ，建议设置为 true
+  jdbc:
+   initialize-schema: never # 是否自动使用 SQL 初始化 Quartz 表结构。这里设置成 never ，我们手动创建表结构。
+  properties:
+   org:
+    quartz:
+     scheduler:
+      instanceName: clusteredScheduler
+      #ID设置为自动获取 每一个必须不同 （所有调度器实例中是唯一的）
+      instanceId: AUTO
+      #指定调度程序的主线程是否应该是守护线程
+      makeSchedulerThreadDaemon: true
+     jobStore:
+      dataSource: quartzDataSource # 使用的数据源
+      #数据保存方式为持久化
+      class: org.quartz.impl.jdbcjobstore.JobStoreTX
+      #StdJDBCDelegate说明支持集群
+      driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+      #quartz内部表的前缀
+      tablePrefix: QRTZ_
+      #是否加入集群
+      isClustered: true
+      clusterCheckinInterval: 10000
+      useProperties: false
+       #容许的最大作业延长时间
+       #misfireThreshold: 25000
+     threadPool:
+      #线程池类型
+      class: org.quartz.simpl.SimpleThreadPool
+      #线程数量
+      threadCount: 20
+      #线程优先级
+      threadPriority: 5
+      threadsInheritContextClassLoaderOfInitializingThread: true
+      #ThreadPool配置线程守护进程
+      makeThreadsDaemons: true
+
+logging:
+ level:
+  root: info
+
+elasticsearch:
+ nodes: 127.0.0.1:9200
+ schema: http
+ max-connect-total: 50
+ max-connect-per-route: 10
+ connection-request-timeout-millis: 500
+ socket-timeout-millis: 30000
+ connect-timeout-millis: 1000
+ indexName: user
+ xpack:
+  security:
+   enabled: false
+ cluster:
+  name: my-elasticsearch
+ http:
+  ip: 127.0.0.1
+  port: 9200
+ transport:
+  tcp:
+   port: 9300
+
+#百度AI
+baidu:
+ #api
+ api:
+  baseUrl: https://aip.baidubce.com/
+  idCardOcrUrl: https://aip.baidubce.com/rest/2.0/ocr/v1/idcard
+  #invoiceOcrUrl：https://aip.baidubce.com/rest/2.0/ocr/v1/vat_invoice
+  appId: 17597636
+  apiKey: B5zxHTgvNI33tCqn31fwKGb9
+  sercetKey: NkjSMn0IvtQQh1FXFt6TefP8UcuR3giR

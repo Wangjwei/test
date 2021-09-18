@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.admin.entity.User;
 import com.example.admin.mapper.UserMapper;
 import com.example.admin.service.UserService;
-import com.example.elasticsearch.service.UserESService;
+import com.example.admin.service.UserESService;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
